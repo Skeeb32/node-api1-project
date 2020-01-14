@@ -76,14 +76,18 @@ server.post('/api/users', (req, res) => {
 
 server.delete('/api/users/:id', (req, res) => {
     const id = req.params.id;
-    db.remove(id)
-        .then(deleted => {
-            res.status(200).json(deleted);
-            if(deleted){
-                res.status(404).end()
-            } else {
-                res.status(404).json({errorMessage:"The user with the specified ID does not exist"})
-            }
+        db.findById(id)
+        .then(() => {
+                db.remove(id)
+        
+        
+                  .then(deleted => {
+            res.status(200).json({Message:"The user was deleted successfully"});
+            // if(deleted){
+            //     res.status(404).end()
+            // } else {
+            //     res.status(404).json({errorMessage:"The user with the specified ID does not exist"})
+            // }
         })
         .catch(error => {
             console.log(error);
@@ -92,6 +96,10 @@ server.delete('/api/users/:id', (req, res) => {
                 errorMessage: "The user could not be removed",
             });
         });
+        })
+        .catch(err => {
+            res.status(404).json({message: 'User doesnt exist'})
+        })
         
 });
 // // Update Data:
