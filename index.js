@@ -49,29 +49,7 @@ server.get('/api/users/:id', (req, res) => {
         })
 })
 
-// // Create a Post
-server.post('/api/users', (req, res) => {
-    console.log(req.body);
-    const { name, bio } = req.body;
-    if (!name || !bio) {
-        res.status(400).json({ errorMessage: "Please provide name and bio for the user." });
-    }
-    db.insert({ name, bio })
-        .then(({ id }) => {
-            db.findById(id)
-                .then(users => {
-                    res.status(201).json(users);
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(500).json({ error: "There was an error while saving the user to the database" });
-                });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({ error: "server error inserting user" });
-        });
-});
+api/post
 // // Delete
 
 server.delete('/api/users/:id', (req, res) => {
