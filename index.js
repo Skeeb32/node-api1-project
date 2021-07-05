@@ -49,41 +49,23 @@ server.get('/api/users/:id', (req, res) => {
         })
 })
 
-// // Create a Post
-server.post('/api/users', (req, res) => {
-    console.log(req.body);
-    const { name, bio } = req.body;
-    if (!name || !bio) {
-        res.status(400).json({ errorMessage: "Please provide name and bio for the user." });
-    }
-    db.insert({ name, bio })
-        .then(({ id }) => {
-            db.findById(id)
-                .then(users => {
-                    res.status(201).json(users);
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(500).json({ error: "There was an error while saving the user to the database" });
-                });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({ error: "server error inserting user" });
-        });
-});
+api/post
 // // Delete
 
 server.delete('/api/users/:id', (req, res) => {
     const id = req.params.id;
-    db.remove(id)
-        .then(deleted => {
-            res.status(200).json(deleted);
-            if(deleted){
-                res.status(404).end()
-            } else {
-                res.status(404).json({errorMessage:"The user with the specified ID does not exist"})
-            }
+        db.findById(id)
+        .then(() => {
+                db.remove(id)
+        
+        
+                  .then(deleted => {
+            res.status(200).json({Message:"The user was deleted successfully"});
+            // if(deleted){
+            //     res.status(404).end()
+            // } else {
+            //     res.status(404).json({errorMessage:"The user with the specified ID does not exist"})
+            // }
         })
         .catch(error => {
             console.log(error);
@@ -92,6 +74,10 @@ server.delete('/api/users/:id', (req, res) => {
                 errorMessage: "The user could not be removed",
             });
         });
+        })
+        .catch(err => {
+            res.status(404).json({message: 'User doesnt exist'})
+        })
         
 });
 // // Update Data:
